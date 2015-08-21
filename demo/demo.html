@@ -5,17 +5,27 @@
     <title>AngularJS ui-mask</title>
 
     <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.css">
+    <style>
+        .helps {
+            margin-top: 5px;;
+            margin-bottom: 5px;;
+        }
 
+        .custom-alert {
+            padding-top: 5px;;
+            padding-bottom: 5px;;
+        }
+    </style>
 </head>
 
 <body class="container">
 
 
-<section id="mask">
+<section id="mask" ng-controller="TestController">
     <div class="page-header">
         <h1>CG Immatriculation Directive</h1>
     </div>
-    <div class="row" ng-controller="TestController">
+    <div class="row">
         <div class="col-md-6">
             <h3>What?</h3>
 
@@ -26,12 +36,14 @@
                     <label class="col-sm-4" for="masked">Empty Input:</label>
 
                     <div class="col-sm-8">
-                        <input class="form-control" type="text"  cg-immatriculation ng-model="x">
+                        <input class="form-control" type="text" id="masked" name="masked" cg-immatriculation ng-model="x" required>
                                 <span class="help-inline">
-                                    <div ng-show="x.length">Model value: <code>{{x}}</code></div>
-                                    <div ng-hide="x.length">Model value: <code>undefined</code></div>
-
+                                    <div ng-show="x.length" class="helps">Model value: <code>{{x}}</code></div>
+                                    <div ng-hide="x.length" class="helps">Model value: <code>undefined</code></div>
                                 </span>
+
+                        <div ng-show="demo.masked.$valid" class="alert alert-success custom-alert">Champ Valide</div>
+                        <div ng-hide="demo.masked.$valid" class="alert alert-danger custom-alert">Champ invalide</div>
                     </div>
                 </div>
                 <hr>
@@ -39,36 +51,61 @@
                     <label class="col-sm-4" for="masked2">Input with default value:</label>
 
                     <div class="col-sm-8">
-                        <input class="form-control" id="masked2" name="masked" type="text"  cg-immatriculation ng-model="default">
-                                <span class="help-inline">
-                                    <div ng-show="default.length">Model value: <code>{{default}}</code></div>
-                                    <div ng-hide="default.length">Model value: <code>undefined</code></div>
+                        <input class="form-control" id="masked2" name="masked2" type="text" cg-immatriculation
+                               ng-model="default">
+                        <span class="help-inline">
+                        <div ng-show="default.length" class="helps">Model value: <code>{{default}}</code></div>
+                        <div ng-hide="default.length" class="helps">Model value: <code>undefined</code></div>
 
-                                </span>
+                        </span>
+
+                        <div ng-show="demo.masked2.$valid" class="alert alert-success custom-alert">Champ Valide</div>
                     </div>
                 </div>
                 <hr>
                 <div class="form-group">
-                    <label class="col-sm-4" >Code:</label>
+                    <label class="col-sm-4" for="masked3">Input with bad Value:</label>
+
+                    <div class="col-sm-8">
+                        <input class="form-control" id="masked3" name="masked3" type="text" cg-immatriculation
+                               ng-model="masked3">
+                                <span class="help-inline">
+                                    <div ng-show="masked3.length" class="helps">Model value: <code>{{masked3}}</code>
+                                    </div>
+                                    <div ng-hide="masked3.length" class="helps">Model value: <code>undefined</code>
+                                    </div>
+
+                                </span>
+
+                        <div ng-hide="demo.masked3.$valid" class="alert alert-danger custom-alert">Champ invalide</div>
+                    </div>
+                </div>
+                <hr>
+                <div class="form-group">
+                    <label class="col-sm-4">Code:</label>
 
                     <div class="col-sm-8">
                         <code>
-                            &lt;input type="text"  cg-immatriculation ng-model="myModel"&gt;
+                            &lt;input type="text" cg-immatriculation ng-model="myModel"&gt;
                         </code>
                     </div>
                 </div>
+            </form>
         </div>
+    </div>
 </section>
 
 <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.1/angular.js"></script>
 
-<!-- ui-mask files -->
+
+<!-- cgImmatriculationk files -->
 <script src="../src/cgImmatriculation.js"></script>
 <script>
     var app = angular.module('demo', ['cg.immatriculation'])
             .controller('TestController', ['$scope', function ($scope) {
                 $scope.default = 'DD-333-FR';
+                $scope.masked3 = 'DD-AAA-FR';
             }]);
 </script>
 </body>

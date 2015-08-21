@@ -8,7 +8,9 @@ angular.module('cg.immatriculation', [])
             lettre = new RegExp('[A-Z]{1}'),
             chiffre = new RegExp('[0-9]{1}'),
             mask2009 = function (v) {
-                var mask = '__-___-__', splitMask = mask.split(''),
+                var mask = '__-___-__',
+                    regexp = /[A-Z]{2}\-[0-9]{3}\-[A-Z]{2}/g,
+                    splitMask = mask.split(''),
                     splitInit = v.split('');
                 var value = '', index = 0, valunmasked = '', forbiddenPos = [];
 
@@ -16,14 +18,22 @@ angular.module('cg.immatriculation', [])
                     if (splitInit[i]) {
                         var tt = angular.uppercase('' + splitInit[i]);
                         if (((0 === i || i === 1) || (7 === i || i === 8) ) && lettre.test(tt)) {
-                            value += tt;
-                            index = i;
+
+                            if ((index === 0) || (index === (i - 1))) {
+                                value += tt;
+                                index = i;
+                            }
+
 
                         }
 
                         if ((3 === i || 4 === i || 5 === i) && chiffre.test(tt)) {
-                            value += tt;
-                            index = i;
+
+                            if (index === (i - 1)) {
+                                value += tt;
+                                index = i;
+                            }
+
                         }
                     }
 
@@ -40,13 +50,16 @@ angular.module('cg.immatriculation', [])
                     }
                 });
                 index++;
-
+                var valid = regexp.test(value);
+                console.log(valid);
                 return {
                     position: index,
                     value: value,
                     defaultMask: mask,
                     forbiddenPos: forbiddenPos,
-                    maxposition: (mask.length - 1)
+                    maxposition: (mask.length - 1),
+                    regexp: regexp,
+                    valid: valid
                 };
             },
 
@@ -55,16 +68,26 @@ angular.module('cg.immatriculation', [])
             };
 
         return {
-            //priority: 100,
+            priority: 100,
             require: 'ngModel',
             restrict: 'A',
             link: function (scope, element, attr, controller) {
                 var eventsBound = false, valOld = '',
                     oldCaretPosition, oldSelectionLength;
+
                 element.attr('placeholder', 'Immatriculation');
+
                 controller.$render = function () {
-                    if (controller.$viewValue)
-                        element.val(controller.$viewValue);
+
+                    if (controller.$viewValue) {
+                        var valMasked = mask2009(controller.$viewValue);
+                        if (valMasked.value !== controller.$viewValue) {
+                            controller.$setViewValue(valMasked.value);
+                            controller.$setValidity(attr.ngModel, valMasked.valid);
+                        }
+                        element.val(valMasked.value);
+
+                    }
                     else
                         element.val('');
                 };
@@ -155,7 +178,7 @@ angular.module('cg.immatriculation', [])
 
                         isKeyLeftArrow = eventWhich === 37,
 
-                        //isKeyBackspace = eventWhich === 8 || (eventType !== 'keyup' && isDeletion && (caretPosDelta === -1)),
+                    //isKeyBackspace = eventWhich === 8 || (eventType !== 'keyup' && isDeletion && (caretPosDelta === -1)),
                         isKeyDelete = eventWhich === 46 || (eventType !== 'keyup' && isDeletion && (caretPosDelta === 0) && !wasSelected),
 
                         forbid = function (pos) {
@@ -175,11 +198,11 @@ angular.module('cg.immatriculation', [])
                         return;
                     }
 
-
+                    element.attr('ng-pattern', valMasked.regexp);
                     element.val(valMasked.value);
                     controller.$setViewValue(valMasked.value);
+                    controller.$setValidity(attr.ngModel, valMasked.valid);
 
-                    // scope.ngModel = valMasked.value;
                     valOld = valMasked.value.substring(0, valMasked.position);
                     if (valMasked.defaultMask === valMasked.value) {
                         setCaretPosition(this, 0);
@@ -202,7 +225,6 @@ angular.module('cg.immatriculation', [])
                     eventsBound = true;
                 }
 
-
                 function initialize() {
                     var v = controller.$modelValue || '', mask = mask2009(v);
                     if (mask.defaultMask !== mask.value) {
@@ -215,6 +237,7 @@ angular.module('cg.immatriculation', [])
 
 
                 attr.$observe('cgImmatriculation', initialize);
+
             }
         };
     }

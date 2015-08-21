@@ -1,0 +1,4 @@
+{
+  "proxy":"http://mutpoit:8085",
+  "https-proxy":"http://mutpoit:8085"
+}
