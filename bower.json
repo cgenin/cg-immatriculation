@@ -1,0 +1,30 @@
+{
+  "name": "cg-immatriculation",
+  "version": "1.0.0",
+  "authors": [
+    "Christophe genin <genin.christophe@gmail.com>"
+  ],
+  "description": "Angularjs directive for french immmatriculation input",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://"
+  },
+  "main": "./dist/cgImmatriculation.js",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "src",
+    "examples"
+  ],
+  "dependencies": {
+    "uri-templates": "~0.1.5",
+    "deep-diff": "~0.2.0",
+    "angular": "latest"
+  },
+  "devDependencies": {
+    "angular-mocks": "latest",
+    "angular-scenario": "latest"
+  }
+}

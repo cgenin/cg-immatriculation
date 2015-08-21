@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="demo">
+<head>
+    <meta charset="utf-8">
+    <title>AngularJS ui-mask</title>
+
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.css">
+
+</head>
+
+<body class="container">
+
+
+<section id="mask">
+    <div class="page-header">
+        <h1>CG Immatriculation Directive</h1>
+    </div>
+    <div class="row" ng-controller="TestController">
+        <div class="col-md-6">
+            <h3>What?</h3>
+
+            <p>Apply a mask on an input field for french immatriculation (version 2009).</p>
+
+            <form name="demo" class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-sm-4" for="masked">Empty Input:</label>
+
+                    <div class="col-sm-8">
+                        <input class="form-control" type="text"  cg-immatriculation ng-model="x">
+                                <span class="help-inline">
+                                    <div ng-show="x.length">Model value: <code>{{x}}</code></div>
+                                    <div ng-hide="x.length">Model value: <code>undefined</code></div>
+
+                                </span>
+                    </div>
+                </div>
+                <hr>
+                <div class="form-group">
+                    <label class="col-sm-4" for="masked2">Input with default value:</label>
+
+                    <div class="col-sm-8">
+                        <input class="form-control" id="masked2" name="masked" type="text"  cg-immatriculation ng-model="default">
+                                <span class="help-inline">
+                                    <div ng-show="default.length">Model value: <code>{{default}}</code></div>
+                                    <div ng-hide="default.length">Model value: <code>undefined</code></div>
+
+                                </span>
+                    </div>
+                </div>
+                <hr>
+                <div class="form-group">
+                    <label class="col-sm-4" >Code:</label>
+
+                    <div class="col-sm-8">
+                        <code>
+                            &lt;input type="text"  cg-immatriculation ng-model="myModel"&gt;
+                        </code>
+                    </div>
+                </div>
+        </div>
+</section>
+
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.1/angular.js"></script>
+
+<!-- ui-mask files -->
+<script src="../src/cgImmatriculation.js"></script>
+<script>
+    var app = angular.module('demo', ['cg.immatriculation'])
+            .controller('TestController', ['$scope', function ($scope) {
+                $scope.default = 'DD-333-FR';
+            }]);
+</script>
+</body>
+</html>
